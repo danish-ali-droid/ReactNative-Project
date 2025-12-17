@@ -117,7 +117,7 @@ const SignupScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.form}>
-          {/* Name Input */}
+        
           <View style={styles.inputContainer}>
             <Icon name="user" size={20} color="#7f8c8d" style={styles.inputIcon} />
             <TextInput
@@ -129,7 +129,7 @@ const SignupScreen = ({ navigation }) => {
           </View>
           {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
 
-          {/* Email Input */}
+     
           <View style={styles.inputContainer}>
             <Icon name="envelope" size={20} color="#7f8c8d" style={styles.inputIcon} />
             <TextInput
@@ -156,7 +156,7 @@ const SignupScreen = ({ navigation }) => {
           </View>
           {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
 
-          {/* Password Input */}
+     
           <View style={styles.inputContainer}>
             <Icon name="lock" size={20} color="#7f8c8d" style={styles.inputIcon} />
             <TextInput
@@ -204,7 +204,7 @@ const SignupScreen = ({ navigation }) => {
             <Text style={styles.errorText}>{errors.confirmPassword}</Text>
           )}
 
-          {/* Terms Checkbox */}
+ 
           <View style={styles.termsContainer}>
             <TouchableOpacity style={styles.checkbox}>
               <Icon name="check" size={15} color="#fff" />
@@ -214,7 +214,6 @@ const SignupScreen = ({ navigation }) => {
             </Text>
           </View>
 
-          {/* Signup Button */}
           <TouchableOpacity
             style={styles.signupButton}
             onPress={handleSignup}
@@ -227,7 +226,7 @@ const SignupScreen = ({ navigation }) => {
             )}
           </TouchableOpacity>
 
-          {/* Already have account */}
+     
           <View style={styles.loginContainer}>
             <Text style={styles.loginText}>Already have an account? </Text>
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
