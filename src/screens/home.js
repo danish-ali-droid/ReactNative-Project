@@ -4,92 +4,123 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  Alert,
   ScrollView,
-  TextInput,
-  FlatList,
-  Image,
+  Dimensions,
   StatusBar,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const stories = [
-  { id: '1', name: 'Danish', image: 'https://placekitten.com/80/80' },
-  { id: '2', name: 'Ali', image: 'https://placekitten.com/81/80' },
-  { id: '3', name: 'Sarah', image: 'https://placekitten.com/82/80' },
-  { id: '4', name: 'Afaq', image: 'https://placekitten.com/83/80' },
-];
+const { width } = Dimensions.get('window');
 
-const posts = [
-  { id: '1', user: 'Danish', time: '2h ago', text: 'Hello World!', likes: 12, comments: 5 },
-  { id: '2', user: 'Ali', time: '5h ago', text: 'React Native is awesome!', likes: 24, comments: 6 },
-];
+/* =======================
+   DASHBOARD DATA (SINGLE)
+======================= */
+const dashboardData = {
+  user: {
+    greeting: 'Good Morning 👋',
+    name: 'Danish Ali',
+  },
+
+  stats: [
+    { label: 'Projects', value: '12', icon: 'folder', color: '#3498db' },
+    { label: 'Tasks', value: '8', icon: 'checkmark-circle', color: '#2ecc71' },
+    { label: 'Messages', value: '24', icon: 'chatbubbles', color: '#e74c3c' },
+    { label: 'Team', value: '6', icon: 'people', color: '#9b59b6' },
+  ],
+
+  actions: [
+    { title: 'New Task', icon: 'add-circle', color: '#3498db' },
+    { title: 'Reports', icon: 'bar-chart', color: '#2ecc71' },
+    { title: 'Calendar', icon: 'calendar', color: '#e74c3c' },
+    { title: 'Settings', icon: 'settings', color: '#9b59b6' },
+  ],
+
+  activities: [
+    { id: 1, title: 'Project Meeting', time: '10:00 AM', icon: 'people', color: '#3498db' },
+    { id: 2, title: 'Task Completed', time: '11:30 AM', icon: 'checkmark-circle', color: '#2ecc71' },
+    { id: 3, title: 'New Message', time: '02:15 PM', icon: 'chatbubble', color: '#e74c3c' },
+    { id: 4, title: 'Report Generated', time: '04:45 PM', icon: 'document-text', color: '#9b59b6' },
+  ],
+};
 
 const HomeScreen = ({ navigation }) => {
-  const [search, setSearch] = useState('');
+  const [notifications, setNotifications] = useState(3);
+
+  const handleLogout = () => {
+    Alert.alert('Logout', 'Are you sure?', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Logout', onPress: () => navigation.navigate('Login') },
+    ]);
+  };
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="#4267B2" barStyle="light-content" />
+      <StatusBar backgroundColor="#3498db" barStyle="light-content" />
 
-      {/* Header */}
+      {/* HEADER */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Facebook</Text>
+        <View>
+          <Text style={styles.greeting}>{dashboardData.user.greeting}</Text>
+          <Text style={styles.userName}>{dashboardData.user.name}</Text>
+        </View>
+
         <View style={styles.headerIcons}>
-          <TouchableOpacity style={styles.iconBtn}>
-            <Icon name="notifications-outline" size={25} color="#fff" />
+          <TouchableOpacity onPress={() => setNotifications(0)}>
+            <Icon name="notifications" size={24} color="#fff" />
+            {notifications > 0 && (
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>{notifications}</Text>
+              </View>
+            )}
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconBtn}>
-            <Icon name="chatbubble-ellipses-outline" size={25} color="#fff" />
+
+          <TouchableOpacity onPress={handleLogout}>
+            <Icon name="log-out-outline" size={24} color="#fff" />
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* Search Bar */}
-      <View style={styles.searchBox}>
-        <Icon name="search" size={20} color="#999" />
-        <TextInput
-          placeholder="Search Facebook"
-          value={search}
-          onChangeText={setSearch}
-          style={styles.searchInput}
-        />
-      </View>
-
+      {/* CONTENT */}
       <ScrollView showsVerticalScrollIndicator={false}>
+        {/* STATS */}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.row}>
+          {dashboardData.stats.map((item, i) => (
+            <View key={i} style={styles.card}>
+              <Icon name={item.icon} size={30} color={item.color} />
+              <Text style={styles.value}>{item.value}</Text>
+              <Text style={styles.label}>{item.label}</Text>
+            </View>
+          ))}
+        </ScrollView>
 
-        {/* Stories */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Stories</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {stories.map(story => (
-              <View key={story.id} style={styles.storyCard}>
-                <Image source={{ uri: story.image }} style={styles.storyImage} />
-                <Text style={styles.storyName}>{story.name}</Text>
-              </View>
-            ))}
-          </ScrollView>
+        {/* ACTIONS */}
+        <View style={styles.grid}>
+          {dashboardData.actions.map((item, i) => (
+            <TouchableOpacity
+              key={i}
+              style={styles.actionCard}
+              onPress={() => Alert.alert(item.title, 'Coming Soon')}
+            >
+              <Icon name={item.icon} size={28} color={item.color} />
+              <Text style={styles.actionText}>{item.title}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
 
-        {/* Posts */}
+        {/* ACTIVITIES */}
         <View style={styles.section}>
-          {posts.map(post => (
-            <View key={post.id} style={styles.postCard}>
-              <View style={styles.postHeader}>
-                <Icon name="person-circle-outline" size={40} color="#555" />
-                <View style={{ marginLeft: 10 }}>
-                  <Text style={styles.postUser}>{post.user}</Text>
-                  <Text style={styles.postTime}>{post.time}</Text>
-                </View>
-              </View>
-              <Text style={styles.postText}>{post.text}</Text>
-              <View style={styles.postFooter}>
-                <Text>{post.likes} Likes</Text>
-                <Text>{post.comments} Comments</Text>
+          <Text style={styles.sectionTitle}>Recent Activities</Text>
+          {dashboardData.activities.map(item => (
+            <View key={item.id} style={styles.activity}>
+              <Icon name={item.icon} size={22} color={item.color} />
+              <View style={{ marginLeft: 12 }}>
+                <Text style={styles.activityTitle}>{item.title}</Text>
+                <Text style={styles.activityTime}>{item.time}</Text>
               </View>
             </View>
           ))}
         </View>
-
       </ScrollView>
     </View>
   );
@@ -97,56 +128,78 @@ const HomeScreen = ({ navigation }) => {
 
 export default HomeScreen;
 
+/* =======================
+        STYLES
+======================= */
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f0f2f5' },
+  container: { flex: 1, backgroundColor: '#f4f6f8' },
 
   header: {
-    backgroundColor: '#4267B2',
+    backgroundColor: '#3498db',
+    padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
-    paddingTop: 50,
   },
-  headerTitle: { color: '#fff', fontSize: 22, fontWeight: 'bold' },
-  headerIcons: { flexDirection: 'row' },
-  iconBtn: { marginLeft: 15 },
 
-  searchBox: {
+  greeting: { color: '#ecf0f1', fontSize: 14 },
+  userName: { color: '#fff', fontSize: 22, fontWeight: 'bold' },
+
+  headerIcons: { flexDirection: 'row', gap: 15 },
+
+  badge: {
+    position: 'absolute',
+    top: -5,
+    right: -8,
+    backgroundColor: 'red',
+    borderRadius: 10,
+    paddingHorizontal: 5,
+  },
+  badgeText: { color: '#fff', fontSize: 10 },
+
+  row: { marginTop: 15, paddingLeft: 15 },
+
+  card: {
+    backgroundColor: '#fff',
+    width: width * 0.4,
+    marginRight: 15,
+    borderRadius: 15,
+    padding: 20,
+    alignItems: 'center',
+  },
+
+  value: { fontSize: 26, fontWeight: 'bold', marginTop: 10 },
+  label: { color: '#7f8c8d' },
+
+  grid: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
-    margin: 15,
-    borderRadius: 25,
-    paddingHorizontal: 15,
-    alignItems: 'center',
-    height: 40,
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    marginTop: 20,
   },
-  searchInput: { flex: 1, marginLeft: 10 },
 
-  section: { marginVertical: 10 },
-  sectionTitle: { fontSize: 18, fontWeight: 'bold', marginLeft: 15, marginBottom: 10 },
-
-  storyCard: { alignItems: 'center', marginHorizontal: 10 },
-  storyImage: { width: 70, height: 70, borderRadius: 35 },
-  storyName: { marginTop: 5, fontSize: 12 },
-
-  postCard: {
+  actionCard: {
     backgroundColor: '#fff',
-    marginHorizontal: 15,
+    width: width * 0.4,
+    padding: 20,
+    borderRadius: 15,
+    alignItems: 'center',
     marginBottom: 15,
-    borderRadius: 12,
-    padding: 10,
   },
-  postHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-  postUser: { fontWeight: 'bold', fontSize: 14 },
-  postTime: { fontSize: 12, color: '#555' },
-  postText: { marginBottom: 10 },
 
-  postFooter: {
+  actionText: { marginTop: 8, fontWeight: '600' },
+
+  section: { padding: 20 },
+
+  sectionTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10 },
+
+  activity: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderTopWidth: 0.5,
-    borderColor: '#ddd',
-    paddingTop: 5,
+    backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 12,
+    marginBottom: 10,
   },
+
+  activityTitle: { fontWeight: '600' },
+  activityTime: { color: '#7f8c8d', fontSize: 12 },
 });
