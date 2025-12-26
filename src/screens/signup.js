@@ -11,8 +11,8 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { authAPI } from '../services/api';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import { authAPI } from '../screens/services/api';
 import { validateEmail, validatePassword, validatePhone } from '../utils/validation';
 
 const SignupScreen = ({ navigation }) => {
